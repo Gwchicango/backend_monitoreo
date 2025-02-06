@@ -1,5 +1,6 @@
 FROM maven:3.8.6-openjdk-18 AS build
-COPY . /app
+COPY pom.xml /app/
+COPY src /app/src/
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
