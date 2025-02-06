@@ -1,14 +1,9 @@
-# Usar la imagen de Java
-FROM openjdk:17-jdk-slim
-
-# Configurar directorio de trabajo
+FROM maven:3.8.6-openjdk-21 AS build
+COPY . /app
 WORKDIR /app
+RUN mvn clean package -DskipTests
 
-# Copiar el archivo JAR del microservicio
-COPY target/prototipo-0.0.1-SNAPSHOT.jar app.jar
-
-# Exponer el puerto del microservicio
+FROM openjdk:21-jdk-slim
 EXPOSE 8004
-
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY --from=build /app/target/*.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
